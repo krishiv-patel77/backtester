@@ -5,12 +5,14 @@ networks:
 # Data to persist will be redis data, postgres data, and pgadmin data
 volumes:
   postgres_data:
+    name: backtester_postgres_data
   pgadmin_data:
+    name: backtester_pgadmin_data
   redis_data:
+    name: backtester_redis_data
 
 services:
   db:
-    container_name: postgres_db
     image: postgres:16
     restart: always
     ports:
@@ -30,7 +32,6 @@ services:
       - app_network
 
   pgadmin:
-    container_name: pgadmin
     image: dpage/pgadmin4
     restart: always
     ports:
@@ -47,7 +48,6 @@ services:
       - app_network
 
   redis:
-    container_name: redis
     image: redis:7-alpine
     restart: always
     ports:
@@ -63,7 +63,6 @@ services:
       - app_network
 
   backtester:
-    container_name: backtester
     build:
       context: ./backtester
       dockerfile: Dockerfile
@@ -84,7 +83,6 @@ services:
       - app_network
 
   celery:
-    container_name: celery_worker
     build:
       context: ./backtester
     command: celery -A src.core.celery_worker worker --loglevel=info          # Celery command structure: celery (CLI command) -A (or --app) path (path to where celery = Celery(..) is instantiated) worker (celery subprocess command)
@@ -102,7 +100,6 @@ services:
       - app_network
 
   flower:
-    container_name: flower
     build:
       context: ./backtester
     command: celery -A src.core.celery_worker flower --port=5555

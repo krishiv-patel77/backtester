@@ -20,7 +20,13 @@ from src.backtest.configuration_schema import Configuration
 logger = logging.getLogger(__name__)
 
 @celery.task(name="run_backtest")
-def workflow_task(config: Configuration):
+def run_backtest(config: Configuration):
     """
     For now, have this handle DataLoader and all possible tasks needed in here
+
+    1. Look through the Configuration to find the required data and fetch it
+    2. Once the data is fetched, run the core logic for the rolling window backtest
+    3. Once the backtest is done, with SessionLocal(), we are going to add it to the database
     """
+    
+
